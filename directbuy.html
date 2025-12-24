@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המחקר המלא: שיטת הורמוזי לאיקומרס ומכירות</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: #f0fdf4; /* Light Green Tint for Money/Sales vibe */
+            color: #1a2e05; 
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #dcfce7; }
+        ::-webkit-scrollbar-thumb { background: #166534; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #14532d; }
+
+        .nav-item.active {
+            background-color: #dcfce7; /* Green-100 */
+            border-right: 4px solid #15803d; /* Green-700 */
+            font-weight: 700;
+            color: #14532d;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+            border-top: 4px solid transparent;
+        }
+        .card:hover { transform: translateY(-2px); border-top-color: #22c55e; }
+
+        .slider-thumb::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #15803d;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden bg-white p-4 shadow-sm flex justify-between items-center z-20">
+        <h1 class="text-xl font-bold text-green-900">Hormozi Ecom Sales</h1>
+        <button id="menuBtn" class="text-green-800 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="bg-white w-full md:w-72 flex-shrink-0 border-l border-green-100 flex flex-col transition-transform transform -translate-x-full md:translate-x-0 absolute md:relative h-full z-10 md:block hidden right-0 shadow-xl">
+        <div class="p-6 border-b border-green-100 hidden md:block">
+            <h1 class="text-2xl font-black text-green-900 tracking-tight">ECOM SALES<br><span class="text-green-600">RESEARCH</span></h1>
+            <p class="text-xs text-slate-500 mt-1">השיטה המדעית למכירות בחנות</p>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li><button onclick="navigateTo('ecom-foundation')" class="nav-item w-full text-right px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center justify-between group"><span>1. עקרונות המכירה באיקומרס</span></button></li>
+                <li><button onclick="navigateTo('product-page')" class="nav-item w-full text-right px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center justify-between group"><span>2. דף המוצר כ"סוגר עסקאות"</span></button></li>
+                <li><button onclick="navigateTo('grand-slam-ecom')" class="nav-item w-full text-right px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center justify-between group"><span>3. ה-Offer: באנדלים ומבצעים</span></button></li>
+                <li><button onclick="navigateTo('value-math')" class="nav-item w-full text-right px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center justify-between group"><span>4. משוואת הערך והמחיר</span></button></li>
+                <li><button onclick="navigateTo('ads-creative')" class="nav-item w-full text-right px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center justify-between group"><span>5. מודעות (Hook) וקריאייטיב</span></button></li>
+                <li><button onclick="navigateTo('backend-profit')" class="nav-item w-full text-right px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center justify-between group"><span>6. הרווח הגדול (Upsells & LTV)</span></button></li>
+                <li><button onclick="navigateTo('metrics-scale')" class="nav-item w-full text-right px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center justify-between group"><span>7. מדדים, דאטה וסקייל</span></button></li>
+            </ul>
+        </nav>
+        
+        <div class="p-4 border-t border-green-100 bg-green-50">
+            <div class="text-xs text-green-800 text-center font-bold">
+                מותאם 100% לחנויות איקומרס<br>ללא לידים • ללא שיחות
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-[#f8fafc] relative w-full">
+        <div id="content-area" class="max-w-6xl mx-auto p-4 md:p-8 pb-20">
+            <!-- Dynamic Content Injected Here -->
+        </div>
+    </main>
+
+    <script>
+        // --- DATA & CONTENT ---
+        const contentData = {
+            'ecom-foundation': {
+                title: 'יסודות המכירה באיקומרס (בלי שיחות)',
+                intro: 'באיקומרס אין איש מכירות שיענה לטלפון. דף המוצר והמודעה הם "איש המכירות" שלך. אם הם לא עובדים, אין כסף. בחלק זה נבין איך מיישמים את פסיכולוגיית המכירה של הורמוזי באופן דיגיטלי לחלוטין.',
+                blocks: [
+                    {
+                        type: 'text',
+                        title: 'מה ההבדל בין שיווק למכירה באיקומרס?',
+                        content: `<strong>שיווק (Marketing):</strong> לגרום להם להקליק על המודעה (לקנות את תשומת הלב).<br>
+                        <strong>מכירה (Sales):</strong> לגרום להם להוסיף לעגלה ולשלם בדף המוצר (לקנות את המוצר).<br><br>
+                        הטעות הכי גדולה: לנסות "למכור" במודעה. המודעה מוכרת את הקליק, הדף מוכר את המוצר.`
+                    },
+                    {
+                        type: 'grid',
+                        title: '4 עמודי התווך של איקומרס רווחי',
+                        items: [
+                            { icon: '💎', title: 'Grand Slam Offer', desc: 'הצעה שגורמת להם להרגיש טיפשים אם יסרבו.' },
+                            { icon: '📄', title: 'דף מוצר ממיר', desc: 'דף שבנוי לטפל בכל התנגדות ולסגור עסקה.' },
+                            { icon: '🎣', title: 'Creative Hook', desc: 'מודעות שעוצרות גלילה ומביאות טראפיק זול.' },
+                            { icon: '💰', title: 'Backend Profit', desc: 'אפסלים ומיילים שעושים את הרווח האמיתי.' }
+                        ]
+                    }
+                ]
+            },
+            'product-page': {
+                title: 'דף המוצר כ"סוגר עסקאות" (The Closer)',
+                intro: 'איך גורמים ללקוח להוציא אשראי בלי לדבר איתו? דף המוצר חייב להיות בנוי לפי סדר פסיכולוגי מדויק שמפרק התנגדויות ובונה אמון.',
+                blocks: [
+                    {
+                        type: 'list_card',
+                        title: 'מבנה דף מוצר מנצח (The Perfect Layout)',
+                        items: [
+                            '<strong>1. Above the Fold:</strong> כותרת שמבטיחה תוצאה + תמונה ברורה + כפתור הוספה לעגלה בולט.',
+                            '<strong>2. הבעיה (The Pain):</strong> תזכיר להם למה הם סובלים כרגע (למשל: "נמאס לך מכאבי גב?").',
+                            '<strong>3. הפתרון והמנגנון:</strong> איך המוצר פותר את הבעיה? הסבר לוגי פשוט.',
+                            '<strong>4. הוכחה חברתית (Social Proof):</strong> ביקורות, תמונות לפני/אחרי, תוכן גולשים (UGC). חובה!',
+                            '<strong>5. היפוך סיכון (Guarantee):</strong> "30 יום ניסיון - לא אהבת? כספך יוחזר". זה מעלה המרה בטירוף.',
+                            '<strong>6. FAQ (טיפול בהתנגדויות):</strong> ענה על שאלות כמו "מתי זה יגיע?", "איך מכבסים את זה?", "האם זה מתאים לי?".'
+                        ]
+                    },
+                    {
+                        type: 'text',
+                        title: 'חוק ה-Friction (חיכוך)',
+                        content: 'כל קליק מיותר, כל שדה מיותר בטופס, כל שניה שהאתר נטען לאט - זה חיכוך שגורם לנטישה. המטרה שלך היא להחליק את הדרך לאשראי. תשלום בטאץ\' (Apple Pay) זה חובה.'
+                    }
+                ]
+            },
+            'grand-slam-ecom': {
+                title: 'בניית ה-Offer: באנדלים ומבצעים',
+                intro: 'למכור מוצר בודד זה קשה ויקר. למכור "חבילה" או "פתרון" זה קל ורווחי. כאן נלמד איך להפוך מוצר רגיל להצעה מפתה.',
+                blocks: [
+                    {
+                        type: 'text',
+                        title: 'המוצר הוא לא ההצעה',
+                        content: 'המוצר הוא "שעון". ההצעה היא: "שעון + רצועה נוספת מתנה + קופסה מהודרת + אחריות לכל החיים + משלוח מהיר חינם ב-299₪ בלבד ל-24 שעות הקרובות". את מה יותר קל למכור?'
+                    },
+                    {
+                        type: 'simulator_offer', // Custom calculator for bundles
+                        title: 'מחשבון פיצוח באנדלים',
+                        desc: 'ראה איך מכירת באנדל משנה את הרווחיות שלך דרמטית.'
+                    },
+                    {
+                        type: 'faq',
+                        title: 'סוגי הצעות לאיקומרס',
+                        questions: [
+                            { q: 'Quantity Breaks', a: 'קנה 1 ב-100, קנה 2 ב-180, קנה 3 ב-250. מעודד רכישה גדולה יותר (AOV גבוה).' },
+                            { q: 'Free Gift with Purchase', a: 'במקום הנחה כספית, תן מוצר שעולה לך מעט (למשל גרביים) אבל שווה ללקוח הרבה. זה שומר על ערך המותג.' },
+                            { q: 'Scarcity & Urgency', a: '"המלאי אוזל", "המבצע נגמר בחצות". חייב להיות אמיתי ואמין כדי לעבוד.' }
+                        ]
+                    }
+                ]
+            },
+            'value-math': {
+                title: 'משוואת הערך (Value Equation)',
+                intro: 'הכלי הכי חשוב של הורמוזי לתמחור. איך גורמים ללקוח לשלם ביוקר ולהרגיש שזה זול? משחקים עם 4 המשתנים.',
+                blocks: [
+                    {
+                        type: 'simulator_value', // Keep the value simulator
+                        title: 'סימולטור הערך',
+                        desc: 'הזז את הסליידרים כדי לראות איך להעלות את ערך המוצר שלך בעיני הלקוח.'
+                    },
+                    {
+                        type: 'text',
+                        title: 'יישום באיקומרס',
+                        content: '<strong>Dream Outcome:</strong> תמונות מדהימות של התוצאה הסופית.<br><strong>Likelihood:</strong> הוכחות חברתיות וביקורות.<br><strong>Delay:</strong> משלוח מהיר, תוצאות מיידיות.<br><strong>Effort:</strong> קל לשימוש, מגיע מורכב, הוראות פשוטות.'
+                    }
+                ]
+            },
+            'ads-creative': {
+                title: 'מודעות וקריאייטיב (The Hook)',
+                intro: 'הפרסומת שלך היא השער. אם אף אחד לא עוצר להסתכל, החנות שלך ריקה. כאן נתמקד באיך לייצר קריאייטיב שמביא קליקים זולים.',
+                blocks: [
+                    {
+                        type: 'grid',
+                        title: 'חוקי הקריאייטיב של הורמוזי',
+                        items: [
+                            { icon: '🎣', title: 'הוק ויזואלי', desc: '3 השניות הראשונות חייבות להיות מוזרות, מפתיעות או שוברות תבנית.' },
+                            { icon: '🤳', title: 'UGC (תוכן גולשים)', desc: 'סרטונים שנראים כמו טיקטוק רגיל מוכרים הרבה יותר מפרסומת "מופקת".' },
+                            { icon: '📢', title: 'Call To Action', desc: 'תגיד להם בדיוק מה לעשות: "לחצו כאן להזמנה".' },
+                            { icon: '🔄', title: 'איטרציות מהירות', desc: 'תבדוק 10 מודעות בשבוע. תהרוג את מה שלא עובד, תשכפל את מה שכן.' }
+                        ]
+                    },
+                    {
+                        type: 'text',
+                        title: 'מדד ה-CTR',
+                        content: 'אם ה-CTR (אחוז הקלקה) שלך נמוך מ-1%, המודעה משעממת. הבעיה היא לא בפייסבוק, הבעיה היא בתמונה או בכותרת שלך.'
+                    }
+                ]
+            },
+            'backend-profit': {
+                title: 'הרווח הגדול (Upsells & LTV)',
+                intro: 'רוב המפרסמים מפסידים כסף או רק מחזירים השקעה (Break Even) במכירה הראשונה. הרווח האמיתי מגיע ממה שקורה *אחרי* שהלקוח שלף אשראי.',
+                blocks: [
+                    {
+                        type: 'chart_profit',
+                        title: 'השפעת ה-Upsells על הרווח הנקי',
+                        desc: 'גרף שמראה איך תוספת קטנה להזמנה מכפילה את הרווח בכיס.'
+                    },
+                    {
+                        type: 'list_card',
+                        title: 'שיטות להגדלת סל (Maximizers)',
+                        items: [
+                            '<strong>Order Bump:</strong> צ\'ק בוקס קטן בעגלה להוספת מוצר נלווה (למשל: סוללות, ביטוח משלוח).',
+                            '<strong>One Click Upsell:</strong> אחרי התשלום, הצע להם מוצר נוסף בהנחה גדולה בלחיצת כפתור אחת (בלי להכניס אשראי שוב).',
+                            '<strong>Email Marketing:</strong> סדרת מיילים אוטומטית ללקוחות קיימים. זה כסף חינם (בלי עלות פרסום).'
+                        ]
+                    }
+                ]
+            },
+            'metrics-scale': {
+                title: 'מדדים וסקייל',
+                intro: 'איך יודעים מתי להגדיל תקציב? מסתכלים על המספרים. אין רגש, רק מתמטיקה.',
+                blocks: [
+                    {
+                        type: 'faq',
+                        title: 'המספרים שחייבים להכיר',
+                        questions: [
+                            { q: 'CPA (Cost Per Acquisition)', a: 'כמה עולה לך להביא לקוח משלם? (לא ליד, לקוח!).' },
+                            { q: 'AOV (Average Order Value)', a: 'כמה כסף הלקוח משאיר בממוצע בקנייה? המטרה: שה-AOV יהיה גבוה משמעותית מה-CPA.' },
+                            { q: 'LTV (Lifetime Value)', a: 'כמה כסף הלקוח ישאיר אצלך לאורך כל חייו? (קניות חוזרות).' },
+                            { q: 'ROAS (Return On Ad Spend)', a: 'על כל שקל שהוצאת, כמה נכנס? מתחת ל-2 זה מסוכן. מעל 4 זה מעולה.' }
+                        ]
+                    },
+                    {
+                        type: 'text',
+                        title: 'מתי עושים סקייל?',
+                        content: 'רק כשהמשפך ממיר וה-CPA יציב ונמוך מהרווח הגולמי. סקייל על משפך מפסיד רק יגרום לך להפסיד כסף מהר יותר.'
+                    }
+                ]
+            }
+        };
+
+        // --- RENDER LOGIC ---
+        function renderContent(sectionId) {
+            const data = contentData[sectionId];
+            const contentArea = document.getElementById('content-area');
+            
+            let html = `
+                <div class="mb-8 animate-fade-in">
+                    <h2 class="text-3xl md:text-4xl font-black text-green-900 mb-4">${data.title}</h2>
+                    <p class="text-lg text-slate-700 leading-relaxed max-w-3xl border-r-4 border-green-500 pr-4 bg-white p-4 rounded shadow-sm">${data.intro}</p>
+                </div>
+                <div class="grid grid-cols-1 gap-8">
+            `;
+
+            data.blocks.forEach(block => {
+                // TEXT BLOCK
+                if (block.type === 'text') {
+                    html += `
+                        <div class="card p-6 bg-white border border-green-50">
+                            <h3 class="text-xl font-bold text-green-800 mb-3">${block.title}</h3>
+                            <div class="text-slate-600 leading-relaxed">${block.content}</div>
+                        </div>
+                    `;
+                } 
+                // GRID BLOCK
+                else if (block.type === 'grid') {
+                    html += `<div class="card p-6 bg-white"><h3 class="text-xl font-bold text-green-800 mb-6">${block.title}</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+                    block.items.forEach(item => {
+                        html += `
+                            <div class="bg-green-50 p-4 rounded-lg hover:bg-green-100 transition border border-green-100">
+                                <div class="text-3xl mb-2">${item.icon}</div>
+                                <h4 class="font-bold text-green-900 mb-1">${item.title}</h4>
+                                <p class="text-sm text-slate-600">${item.desc}</p>
+                            </div>
+                        `;
+                    });
+                    html += `</div></div>`;
+                }
+                // LIST CARD BLOCK
+                else if (block.type === 'list_card') {
+                    html += `
+                        <div class="card p-6 bg-white">
+                            <h3 class="text-xl font-bold text-green-800 mb-4">${block.title}</h3>
+                            <ul class="space-y-3">
+                                ${block.items.map(item => `
+                                    <li class="flex items-start">
+                                        <span class="text-green-500 ml-2 mt-1 flex-shrink-0">✔</span>
+                                        <span class="text-slate-700">${item}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                // FAQ BLOCK
+                else if (block.type === 'faq') {
+                    html += `
+                        <div class="card p-6 bg-white">
+                            <h3 class="text-xl font-bold text-green-800 mb-4">${block.title}</h3>
+                            <div class="space-y-4">
+                                ${block.questions.map((q, idx) => `
+                                    <div class="border border-green-100 rounded-lg overflow-hidden">
+                                        <button onclick="toggleFaq(this)" class="w-full text-right px-4 py-3 bg-green-50 hover:bg-green-100 font-medium flex justify-between items-center focus:outline-none text-green-900">
+                                            <span>${q.q}</span>
+                                            <span class="text-green-600 transform transition-transform duration-200">+</span>
+                                        </button>
+                                        <div class="hidden px-4 py-3 bg-white text-slate-600 border-t border-green-100 text-sm leading-relaxed">
+                                            ${q.a}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                // VALUE SIMULATOR BLOCK
+                else if (block.type === 'simulator_value') {
+                    html += `
+                        <div class="card p-6 bg-white border-2 border-green-800">
+                            <h3 class="text-xl font-bold text-green-900 mb-2">${block.title}</h3>
+                            <p class="text-sm text-slate-500 mb-6">${block.desc}</p>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <div class="space-y-6">
+                                    ${['outcome', 'likelihood', 'delay', 'effort'].map(key => `
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <label class="text-sm font-bold text-slate-700 capitalize">${translateKey(key)}</label>
+                                                <span class="text-sm font-mono text-green-600 font-bold" id="val-${key}">5</span>
+                                            </div>
+                                            <input type="range" min="1" max="10" value="5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider-thumb" oninput="updateValueEq('${key}', this.value)">
+                                            <div class="flex justify-between text-xs text-slate-400 mt-1">
+                                                <span>נמוך</span>
+                                                <span>גבוה</span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div class="flex flex-col items-center justify-center bg-green-900 rounded-xl p-8 text-white text-center relative overflow-hidden shadow-inner">
+                                    <div class="z-10">
+                                        <div class="text-green-300 text-sm uppercase tracking-widest mb-2">ערך נתפס ללקוח</div>
+                                        <div class="text-6xl font-black text-white" id="final-value">25.0</div>
+                                        <div class="text-xs text-green-400 mt-4 px-4">Dream × Likelihood ÷ (Delay × Effort)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                // OFFER BUNDLE SIMULATOR
+                else if (block.type === 'simulator_offer') {
+                    html += `
+                         <div class="card p-6 bg-white border border-green-200">
+                            <h3 class="text-xl font-bold text-green-800 mb-4">${block.title}</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="text-sm text-slate-500">מחיר יחידה (₪)</label>
+                                        <input type="number" id="unitPrice" value="100" class="w-full border rounded p-2" oninput="calcBundle()">
+                                    </div>
+                                    <div>
+                                        <label class="text-sm text-slate-500">עלות מוצר (COGS) (₪)</label>
+                                        <input type="number" id="unitCost" value="30" class="w-full border rounded p-2" oninput="calcBundle()">
+                                    </div>
+                                    <div>
+                                        <label class="text-sm text-slate-500">עלות פרסום לרכישה (CPA) (₪)</label>
+                                        <input type="number" id="cpaCost" value="40" class="w-full border rounded p-2" oninput="calcBundle()">
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded space-y-4">
+                                    <div class="flex justify-between border-b pb-2">
+                                        <span>רווח ממוצר יחיד:</span>
+                                        <span id="singleProfit" class="font-bold text-red-500">30 ₪</span>
+                                    </div>
+                                    <div class="flex justify-between border-b pb-2">
+                                        <span>רווח מבאנדל (3 יח' ב-250):</span>
+                                        <span id="bundleProfit" class="font-bold text-green-600">120 ₪</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 mt-2">*הנחה: ה-CPA נשאר כמעט זהה למכירת יחידה או באנדל, אך סכום העגלה עולה.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                // PROFIT CHART
+                else if (block.type === 'chart_profit') {
+                    html += `
+                        <div class="card p-6 bg-white">
+                            <h3 class="text-xl font-bold text-green-800 mb-2">${block.title}</h3>
+                            <p class="text-sm text-slate-500 mb-4">${block.desc}</p>
+                            <div class="chart-container">
+                                <canvas id="profitChartCanvas"></canvas>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            html += `</div>`;
+            contentArea.innerHTML = html;
+
+            // Post Render Init
+            if (document.getElementById('final-value')) updateValueEqDisplay();
+            if (document.getElementById('bundleProfit')) calcBundle();
+            if (document.getElementById('profitChartCanvas')) initProfitChart();
+        }
+
+        // --- NAVIGATION LOGIC ---
+        function navigateTo(sectionId) {
+            renderContent(sectionId);
+            
+            // Update Active State
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            // Find the button that calls this function (approximate match)
+            const btns = document.querySelectorAll('button[onclick]');
+            btns.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(sectionId)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Mobile close
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        }
+
+        // --- INTERACTIVITY LOGIC ---
+        
+        // FAQ Toggle
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('span:last-child');
+            content.classList.toggle('hidden');
+            if (content.classList.contains('hidden')) {
+                icon.innerText = '+';
+                icon.classList.remove('rotate-45');
+            } else {
+                icon.innerText = '+';
+                icon.classList.add('rotate-45');
+            }
+        }
+
+        // Value Simulator
+        const valueState = { outcome: 5, likelihood: 5, delay: 5, effort: 5 };
+        
+        function translateKey(key) {
+            const map = {
+                'outcome': 'תוצאה רצויה (Dream)',
+                'likelihood': 'סיכוי להצלחה (Trust)',
+                'delay': 'זמן המתנה (Delay)',
+                'effort': 'מאמץ נדרש (Effort)'
+            };
+            return map[key];
+        }
+
+        function updateValueEq(key, val) {
+            valueState[key] = parseFloat(val);
+            document.getElementById(`val-${key}`).innerText = val;
+            updateValueEqDisplay();
+        }
+
+        function updateValueEqDisplay() {
+            // Formula: (Outcome * Likelihood) / (Delay * Effort)
+            // Normalized logic for visual output
+            const numerator = valueState.outcome * valueState.likelihood;
+            const denominator = valueState.delay * valueState.effort;
+            let score = (numerator / denominator) * 10;
+            document.getElementById('final-value').innerText = score.toFixed(1);
+        }
+
+        // Bundle Calculator
+        function calcBundle() {
+            const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+            const cost = parseFloat(document.getElementById('unitCost').value) || 0;
+            const cpa = parseFloat(document.getElementById('cpaCost').value) || 0;
+
+            // Single unit logic
+            const singleProfit = price - cost - cpa;
+            
+            // Bundle logic: Sell 3 for price of 2.5 (example discount)
+            const bundlePrice = price * 2.5; 
+            const bundleCost = cost * 3;
+            // CPA stays same (paying for one customer acquisition)
+            const bundleProfit = bundlePrice - bundleCost - cpa;
+
+            const singleEl = document.getElementById('singleProfit');
+            const bundleEl = document.getElementById('bundleProfit');
+
+            singleEl.innerText = singleProfit.toFixed(0) + ' ₪';
+            bundleEl.innerText = bundleProfit.toFixed(0) + ' ₪';
+
+            singleEl.className = singleProfit > 0 ? "font-bold text-green-600" : "font-bold text-red-500";
+            bundleEl.className = "font-bold text-green-600";
+        }
+
+        // Profit Chart
+        function initProfitChart() {
+            const ctx = document.getElementById('profitChartCanvas').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['מכירה רגילה (יחידה)', 'מכירה עם Upsell'],
+                    datasets: [
+                        {
+                            label: 'עלות מוצר ושילוח',
+                            data: [40, 50], // Upsell adds small cost
+                            backgroundColor: '#94a3b8'
+                        },
+                        {
+                            label: 'עלות פרסום (CPA)',
+                            data: [40, 40], // CPA stays same!
+                            backgroundColor: '#64748b'
+                        },
+                        {
+                            label: 'רווח נקי',
+                            data: [20, 110], // Huge jump in profit
+                            backgroundColor: '#22c55e'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Mobile Menu
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            const sb = document.getElementById('sidebar');
+            sb.classList.toggle('-translate-x-full');
+            sb.classList.toggle('hidden');
+        });
+
+        // Init
+        window.addEventListener('DOMContentLoaded', () => {
+            navigateTo('ecom-foundation');
+        });
+
+    </script>
+</body>
+</html>
